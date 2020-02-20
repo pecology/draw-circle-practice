@@ -25,7 +25,7 @@ ctx.lineCap = "round";
 let drawedPoints = [];
 let mousedown = false;
 
-onStart = e => {
+onStart = point => {
     document.querySelector("#score").innerText = "";
     ctx.clearRect(0, 0, 500, 500);
     const centerPoint = new Point(250, 250);
@@ -34,15 +34,17 @@ onStart = e => {
     ctx.beginPath();
     ctx.strokeStyle = "Black";
     ctx.globalAlpha =  1;
-    ctx.moveTo(e.offsetX, e.offsetY);
-    drawedPoints.push(new Point(e.offsetX, e.offsetY));
+    // ctx.moveTo(e.offsetX, e.offsetY);
+    // drawedPoints.push(new Point(e.offsetX, e.offsetY));
+    ctx.moveTo(point.x, point.y);
+    drawedPoints.push(new Point(point.x, point.y));
     mousedown = true;
 }
 
-onMove = e => {
+onMove = point => {
     if(mousedown) {
-        ctx.lineTo(e.offsetX, e.offsetY);
-        drawedPoints.push(new Point(e.offsetX, e.offsetY));
+        ctx.lineTo(point.x, point.y);
+        drawedPoints.push(new Point(point.x, point.y));
         ctx.stroke();
     }
 }
@@ -66,10 +68,22 @@ onEnd = () => {
 }
 
 
-canvas.addEventListener("mousedown", onStart)
-canvas.addEventListener("mousemove", onMove);
-canvas.addEventListener("mouseup", onEnd);
+canvas.addEventListener("mousedown", e => onStart(new Point(e.offsetX, e.offsetY)))
+canvas.addEventListener("mousemove", e => onMove(new Point(e.offsetX, e.offsetY)));
+canvas.addEventListener("mouseup", e => onEnd(new Point(e.offsetX, e.offsetY)));
 
-canvas.addEventListener("touchstart", onStart)
-canvas.addEventListener("touchmove", onMove);
-canvas.addEventListener("touchend", onEnd);
+canvas.addEventListener("touchstart", e => {
+    const x = e.changedTouches[0].clientX - canvas.getBoundingClientRect().left;
+    const y = e.changedTouches[0].clientY - canvas.getBoundingClientRect().top;
+    onStart(new Point(x, y));
+});
+canvas.addEventListener("touchmove", e => {
+    const x = e.changedTouches[0].clientX - canvas.getBoundingClientRect().left;
+    const y = e.changedTouches[0].clientY - canvas.getBoundingClientRect().top;
+    onMove(new Point(x, y));
+});
+canvas.addEventListener("touchend", e => {
+    const x = e.changedTouches[0].clientX - canvas.getBoundingClientRect().left;
+    const y = e.changedTouches[0].clientY - canvas.getBoundingClientRect().top;
+    onEnd(new Point(x, y));
+});
