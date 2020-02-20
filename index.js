@@ -12,8 +12,6 @@ class Point {
     }
 }
 
-
-
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -25,9 +23,9 @@ ctx.lineWidth = 5;
 ctx.lineCap = "round";
 
 let drawedPoints = [];
-
 let mousedown = false;
-canvas.addEventListener("mousedown", e => {
+
+onStart = e => {
     document.querySelector("#score").innerText = "";
     ctx.clearRect(0, 0, 500, 500);
     const centerPoint = new Point(250, 250);
@@ -39,9 +37,17 @@ canvas.addEventListener("mousedown", e => {
     ctx.moveTo(e.offsetX, e.offsetY);
     drawedPoints.push(new Point(e.offsetX, e.offsetY));
     mousedown = true;
-})
+}
 
-canvas.addEventListener("mouseup", () => {
+onMove = e => {
+    if(mousedown) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        drawedPoints.push(new Point(e.offsetX, e.offsetY));
+        ctx.stroke();
+    }
+}
+
+onEnd = () => {
     mousedown = false;
 
     const distancesToCenter = drawedPoints.map(p => p.distance(centerPoint));
@@ -57,12 +63,13 @@ canvas.addEventListener("mouseup", () => {
     document.querySelector("#score").innerText = Math.round(score * 100) / 100;
 
     drawedPoints = [];
-});
+}
 
-canvas.addEventListener("mousemove", e => {
-    if(mousedown) {
-        ctx.lineTo(e.offsetX, e.offsetY);
-        drawedPoints.push(new Point(e.offsetX, e.offsetY));
-        ctx.stroke();
-    }
-});
+
+canvas.addEventListener("mousedown", onStart)
+canvas.addEventListener("mousemove", onMove);
+canvas.addEventListener("mouseup", onEnd);
+
+canvas.addEventListener("touchstart", onStart)
+canvas.addEventListener("touchmove", onMove);
+canvas.addEventListener("touchend", onEnd);
