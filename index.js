@@ -76,14 +76,17 @@ canvas.addEventListener("touchstart", e => {
     const x = e.changedTouches[0].clientX - canvas.getBoundingClientRect().left;
     const y = e.changedTouches[0].clientY - canvas.getBoundingClientRect().top;
     onStart(new Point(x, y));
-}, {passive: true});
+    e.preventDefault();
+});
 canvas.addEventListener("touchmove", e => {
     const x = e.changedTouches[0].clientX - canvas.getBoundingClientRect().left;
     const y = e.changedTouches[0].clientY - canvas.getBoundingClientRect().top;
     onMove(new Point(x, y));
-}, {passive: true});
+    e.preventDefault();
+});
 canvas.addEventListener("touchend", e => {
     const x = e.changedTouches[0].clientX - canvas.getBoundingClientRect().left;
     const y = e.changedTouches[0].clientY - canvas.getBoundingClientRect().top;
     onEnd(new Point(x, y));
-}, {passive: true});
+    e.preventDefault();
+});
