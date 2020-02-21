@@ -29,6 +29,9 @@ let mousedown = false;
 onStart = point => {
     document.querySelector("#score").innerText = "";
     ctx.clearRect(0, 0, 500, 500);
+
+    ctx.lineWidth = document.querySelector("#line-width").value;
+
     if(document.querySelector("#fix-center-point").checked) {
         const centerPoint = new Point(250, 250);
         ctx.fillRect(centerPoint.x - 5, centerPoint.y -5, 10, 10);
